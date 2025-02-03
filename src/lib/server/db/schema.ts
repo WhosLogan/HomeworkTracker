@@ -13,4 +13,5 @@ export const session = sqliteTable('session', {
 	userId: integer('user_id').notNull()
 		.references(() => user.id),
 	expiresAt: integer('expires_at', {mode: 'timestamp'}).notNull(),
+	rememberMe: integer('remember_me').default(0),
 })
