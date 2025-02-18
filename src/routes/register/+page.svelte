@@ -12,7 +12,7 @@
 	<form class="flex flex-col border-black space-y-3 w-11/12 md:w-96 bg-white shadow-lg
 	shadow-primary-200 p-4 rounded-lg" method="post" use:enhance>
 		<h3 class="mb-4 text-xl font-medium">Sign up</h3>
-		<div class="flex space-x-3">
+		<div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-3">
 			<Label class="space-y-2">
 				<span>First Name</span>
 				<Input type="text" name="firstName" placeholder="John" required
