@@ -1,5 +1,5 @@
 import { type Session, sessions, type User, users } from '$lib/server/db/schema';
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
+import { encodeBase32LowerCaseNoPadding } from '@oslojs/encoding';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
@@ -39,7 +39,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 	const { user, session } = result[0];
 
 	if (Date.now() >= session.expiresAt.getTime()) {
-		await db.delete(sessions).where(eq(sessions.id, session.id));
+		await invalidateSession(session.id);
 		return { session: null, user: null, update: false };
 	}
 
