@@ -1,4 +1,6 @@
 import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
+import type { InferSelectModel } from 'drizzle-orm';
+import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 
 export const users = sqliteTable('users', {
 	id: integer('id').primaryKey(),
@@ -28,4 +30,6 @@ export const assignments = sqliteTable('assignments', {
 		.references(() => courses.id),
 	assignmentName: text('assignment_name').notNull(),
 	dueDate: integer('due_date').notNull(),
-})
+});
+
+export type Session = InferSelectModel<typeof sessions>;
