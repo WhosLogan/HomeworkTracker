@@ -4,6 +4,8 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 
+export const sessionName = "auth-session";
+
 export function generateSecureToken(): string {
 	const bytes = new Uint8Array(20);
 	crypto.getRandomValues(bytes);
