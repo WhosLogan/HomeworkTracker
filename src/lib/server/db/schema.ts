@@ -32,3 +32,4 @@ export const assignments = sqliteTable('assignments', {
 });
 
 export type Session = InferSelectModel<typeof sessions>;
+export type User = InferSelectModel<typeof users>;
