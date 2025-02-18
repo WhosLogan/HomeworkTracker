@@ -1,6 +1,5 @@
 import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
 import type { InferSelectModel } from 'drizzle-orm';
-import { encodeBase32LowerCaseNoPadding } from "@oslojs/encoding";
 
 export const users = sqliteTable('users', {
 	id: integer('id').primaryKey(),
