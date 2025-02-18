@@ -52,6 +52,7 @@
 	},
 	"dependencies": {
 		"@libsql/client": "^0.14.0",
+		"@noble/hashes": "^1.7.1",
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"drizzle-orm": "^0.38.4"
