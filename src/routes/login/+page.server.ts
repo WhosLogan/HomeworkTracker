@@ -15,7 +15,11 @@ const loginSchema = z.object({
 	password: z.string().min(8, "Password is too short").max(128, "Password is too long"),
 });
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({locals}) => {
+	if (locals.user) {
+		throw redirect(303, '/dashboard');
+	}
+
 	const loginForm = await superValidate(zod(loginSchema));
 
 	return {loginForm};
