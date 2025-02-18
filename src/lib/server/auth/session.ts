@@ -25,7 +25,7 @@ export async function createSession(token: string, userId: number, rememberMe: b
 }
 
 export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	const sessionId = encodeBase32LowerCaseNoPadding(sha256(new TextEncoder().encode(token)));
 	const result = await db
 		.select({ user: users, session: sessions })
 		.from(sessions)
@@ -33,14 +33,14 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		.where(eq(sessions.id, sessionId));
 
 	if (result.length < 1) {
-		return { session: null, user: null };
+		return { session: null, user: null, update: false };
 	}
 
 	const { user, session } = result[0];
 
 	if (Date.now() >= session.expiresAt.getTime()) {
 		await db.delete(sessions).where(eq(sessions.id, session.id));
-		return { session: null, user: null };
+		return { session: null, user: null, update: false };
 	}
 
 	if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
@@ -51,8 +51,10 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 				expiresAt: session.expiresAt
 			})
 			.where(eq(sessions.id, session.id));
+		return { session, user, update: true };
 	}
-	return { session, user };
+
+	return { session, user, update: false };
 }
 
 export async function invalidateSession(sessionId: string): Promise<void> {
@@ -65,5 +67,5 @@ export async function invalidateAllSessions(userId: number): Promise<void> {
 
 
 export type SessionValidationResult =
-	| { session: Session; user: User }
-	| { session: null; user: null };
+	| { session: Session; user: User, update: boolean }
+	| { session: null; user: null, update: boolean };
