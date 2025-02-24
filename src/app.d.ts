@@ -1,4 +1,4 @@
-import type {Session, User} from "$lib/server/database/schema";
+import type {Session, User} from "$lib/server/db/schema";
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
