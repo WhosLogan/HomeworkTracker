@@ -17,6 +17,11 @@
 			href: "/dashboard",
 			name: "Dashboard",
 			icon: "m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25",
+		},
+		{
+			href: "/courses/add",
+			name: "Add Course",
+			icon: "M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
 		}
 	];
 </script>
@@ -56,6 +61,19 @@
 												</a>
 											</li>
 										{/each}
+										<li>
+											<div class="text-xs/6 font-semibold text-primary-200">Your Courses</div>
+											<ul role="list" class="-mx-2 mt-2 space-y-1">
+												{#each data.courses as course}
+													<li>
+														<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-primary-200 hover:bg-primary-700 hover:text-white">
+															<span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-primary-400 bg-primary-500 text-[0.625rem] font-medium text-white">{course.name[0]}</span>
+															<span class="truncate text-white">{course.name}</span>
+														</a>
+													</li>
+												{/each}
+											</ul>
+										</li>
 									</ul>
 							</ul>
 						</nav>
@@ -85,6 +103,21 @@
 									</a>
 								</li>
 							{/each}
+							<li>
+								<div class="text-xs/6 font-semibold text-primary-200">Your Courses</div>
+								<ul role="list" class="-mx-2 mt-2 space-y-1">
+									{#each data.courses as course}
+										<li>
+											<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold
+											text-primary-200 hover:bg-primary-700 hover:text-white">
+												<span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-primary-400
+												bg-primary-700 text-[0.625rem] font-medium text-white">{course.name[0]}</span>
+												<span class="truncate text-white">{course.name}</span>
+											</a>
+										</li>
+									{/each}
+								</ul>
+							</li>
 						</ul>
 				</ul>
 			</nav>
@@ -113,7 +146,7 @@
 						<button type="button" class="-m-1.5 flex items-center p-1.5" id="user-menu-button" aria-expanded="false" aria-haspopup="true" onclick={() => profileMenu = !profileMenu}>
 							<span class="sr-only">Open user menu</span>
 							<span class="flex lg:items-center">
-                <span class="ml-4 text-sm/6 font-semibold text-gray-900" aria-hidden="true">{data.user.firstName} {data.user.lastName}</span>
+                <span class="ml-4 text-sm/6 font-semibold text-gray-900" aria-hidden="true">{data.user?.firstName} {data.user?.lastName}</span>
                 <svg class="ml-2 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                   <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                 </svg>
