@@ -1,0 +1,1 @@
+ALTER TABLE `courses` ADD `user_id` integer NOT NULL REFERENCES users(id);

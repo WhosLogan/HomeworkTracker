@@ -21,6 +21,8 @@ export const courses = sqliteTable('courses', {
 	id: integer('id').primaryKey(),
 	name: text('name').notNull(),
 	professorName: text('professor_name'),
+	userId: integer('user_id').notNull()
+		.references(() => users.id),
 });
 
 export const assignments = sqliteTable('assignments', {
