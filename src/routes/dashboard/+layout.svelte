@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { LayoutProps } from './$types';
+	import { page } from '$app/state';
 
 	const { children, data }: LayoutProps = $props();
 
@@ -24,6 +25,8 @@
 			icon: "M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
 		}
 	];
+
+	let currentPage = $derived(page.url.pathname)
 </script>
 
 <div>
@@ -53,12 +56,21 @@
 									<ul role="list" class="-mx-2 space-y-1">
 										{#each dashboardLinks as link}
 											<li>
-												<a href="{link.href}" class="group flex gap-x-3 rounded-md bg-primary-700 p-2 text-sm/6 font-semibold text-white">
-													<svg class="size-6 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-														<path stroke-linecap="round" stroke-linejoin="round" d="{link.icon}" />
-													</svg>
-													{link.name}
-												</a>
+												{#if currentPage === link.href}
+													<a href="{link.href}" class="group flex gap-x-3 rounded-md bg-primary-700 p-2 text-sm/6 font-semibold text-white">
+														<svg class="size-6 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+															<path stroke-linecap="round" stroke-linejoin="round" d="{link.icon}" />
+														</svg>
+														{link.name}
+													</a>
+												{:else}
+													<a href="{link.href}" class="group flex gap-x-3 rounded-md hover:bg-primary-700/60 p-2 text-sm/6 font-semibold text-white">
+														<svg class="size-6 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+															<path stroke-linecap="round" stroke-linejoin="round" d="{link.icon}" />
+														</svg>
+														{link.name}
+													</a>
+												{/if}
 											</li>
 										{/each}
 										<li>
@@ -66,10 +78,17 @@
 											<ul role="list" class="-mx-2 mt-2 space-y-1">
 												{#each data.courses as course}
 													<li>
-														<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-primary-200 hover:bg-primary-700 hover:text-white">
-															<span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-primary-400 bg-primary-500 text-[0.625rem] font-medium text-white">{course.name[0]}</span>
-															<span class="truncate text-white">{course.name}</span>
-														</a>
+														{#if currentPage.startsWith(`/dashboard/courses/${course.id}`)}
+															<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-primary-200 bg-primary-700 hover:text-white">
+																<span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-primary-400 bg-primary-500 text-[0.625rem] font-medium text-white">{course.name[0]}</span>
+																<span class="truncate text-white">{course.name}</span>
+															</a>
+														{:else}
+															<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-primary-200 hover:bg-primary-700/60 hover:text-white">
+																<span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-primary-400 bg-primary-500 text-[0.625rem] font-medium text-white">{course.name[0]}</span>
+																<span class="truncate text-white">{course.name}</span>
+															</a>
+														{/if}
 													</li>
 												{/each}
 											</ul>
@@ -95,12 +114,21 @@
 						<ul role="list" class="-mx-2 space-y-1">
 							{#each dashboardLinks as link}
 								<li>
-									<a href="{link.href}" class="group flex gap-x-3 rounded-md bg-primary-700 p-2 text-sm/6 font-semibold text-white">
-										<svg class="size-6 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-											<path stroke-linecap="round" stroke-linejoin="round" d="{link.icon}" />
-										</svg>
-										{link.name}
-									</a>
+									{#if currentPage === link.href}
+										<a href="{link.href}" class="group flex gap-x-3 rounded-md bg-primary-700 p-2 text-sm/6 font-semibold text-white">
+											<svg class="size-6 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+												<path stroke-linecap="round" stroke-linejoin="round" d="{link.icon}" />
+											</svg>
+											{link.name}
+										</a>
+									{:else}
+										<a href="{link.href}" class="group flex gap-x-3 rounded-md hover:bg-primary-700/60 p-2 text-sm/6 font-semibold text-white">
+											<svg class="size-6 shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+												<path stroke-linecap="round" stroke-linejoin="round" d="{link.icon}" />
+											</svg>
+											{link.name}
+										</a>
+									{/if}
 								</li>
 							{/each}
 							<li>
@@ -108,12 +136,21 @@
 								<ul role="list" class="-mx-2 mt-2 space-y-1">
 									{#each data.courses as course}
 										<li>
-											<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold
-											text-primary-200 hover:bg-primary-700 hover:text-white">
+											{#if currentPage.startsWith(`/dashboard/courses/${course.id}`)}
+												<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold
+											text-primary-200 bg-primary-700 hover:text-white">
 												<span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-primary-400
 												bg-primary-700 text-[0.625rem] font-medium text-white">{course.name[0]}</span>
-												<span class="truncate text-white">{course.name}</span>
-											</a>
+													<span class="truncate text-white">{course.name}</span>
+												</a>
+											{:else}
+												<a href="/dashboard/courses/{course.id}" class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold
+											text-primary-200 hover:bg-primary-700/60 hover:text-white">
+												<span class="flex size-6 shrink-0 items-center justify-center rounded-lg border border-primary-400
+												bg-primary-700 text-[0.625rem] font-medium text-white">{course.name[0]}</span>
+													<span class="truncate text-white">{course.name}</span>
+												</a>
+											{/if}
 										</li>
 									{/each}
 								</ul>
