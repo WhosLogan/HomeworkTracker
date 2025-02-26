@@ -1,1 +1,1 @@
-<p>Dashboard</p>
+<p>This website is currently in functional beta, we'll be done soon!</p>
