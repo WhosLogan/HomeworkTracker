@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import {
+		Badge,
 		Button,
 		Helper,
 		Input,
@@ -13,6 +14,7 @@
 		TableHeadCell
 	} from 'flowbite-svelte';
 	import { superForm } from 'sveltekit-superforms';
+	import {enhance} from '$app/forms';
 
 	const {data}: PageProps = $props();
 
@@ -39,12 +41,37 @@
 		<TableHead>
 			<TableHeadCell>Assignment Name</TableHeadCell>
 			<TableHeadCell>Due Date</TableHeadCell>
+			<TableHeadCell>Status</TableHeadCell>
+			<TableHeadCell>Actions</TableHeadCell>
 		</TableHead>
 		<TableBody>
 			{#each data.assignments as assignment}
 				<TableBodyRow>
 					<TableBodyCell>{assignment.assignmentName}</TableBodyCell>
 					<TableBodyCell>{assignment.dueDate.toDateString()}</TableBodyCell>
+					<TableBodyCell>
+						{#if assignment.status === 'Incomplete'}
+							<Badge color="yellow">Incomplete</Badge>
+						{:else}
+							<Badge color="green">Complete</Badge>
+						{/if}
+					</TableBodyCell>
+					<TableBodyCell>
+						<div class="flex space-x-3">
+							<form action="?/toggleComplete" method="post" use:enhance>
+								<input type="hidden" name="assignmentId" value={assignment.id} />
+								{#if assignment.status === 'Incomplete'}
+									<Button type="submit">Mark Complete</Button>
+								{:else}
+									<Button type="submit">Mark Incomplete</Button>
+								{/if}
+							</form>
+							<form action="?/removeAssignment" method="post" use:enhance>
+								<input type="hidden" name="assignmentId" value={assignment.id} />
+								<Button color="red" type="submit">Remove</Button>
+							</form>
+						</div>
+					</TableBodyCell>
 				</TableBodyRow>
 			{/each}
 		</TableBody>
@@ -65,11 +92,11 @@
 		<Label class="space-y-2 w-full">
 			<span>Due Date</span>
 			<Input name="dueDate" required type="date" bind:value={$addAssignmentForm.dueDate} />
-					{#if $addAssignmentErrors.professorName}
+					{#if $addAssignmentErrors.dueDate}
 						<Helper color='red'>{$addAssignmentErrors.dueDate}</Helper>
 					{/if}
 		</Label>
-		<Button variant="primary" type="submit">Create Assignment</Button>
+		<Button type="submit">Create Assignment</Button>
 	</form>
 </Modal>
 

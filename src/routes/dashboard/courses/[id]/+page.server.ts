@@ -56,5 +56,44 @@ export const actions: Actions = {
 			assignmentName: form.data.assignmentName,
 			dueDate: form.data.dueDate
 		});
+	},
+	removeAssignment: async ({request, locals, params}) => {
+		const form = await request.formData();
+		const assignmentId = parseInt(form.get('assignmentId') as string);
+
+		const course = await db.query.courses.findFirst({
+			where: and(eq(courses.id, parseInt(params.id)), eq(courses.userId, locals.user!.id))
+		});
+
+		if (!course) {
+			error(400, "Invalid request");
+		}
+
+		await db.delete(assignments).where(and(eq(assignments.id, assignmentId),
+			eq(assignments.courseId, course.id)));
+	},
+	toggleComplete: async ({request, locals, params}) => {
+		const form = await request.formData();
+		const assignmentId = parseInt(form.get('assignmentId') as string);
+
+		const course = await db.query.courses.findFirst({
+			where: and(eq(courses.id, parseInt(params.id)), eq(courses.userId, locals.user!.id))
+		});
+
+		if (!course) {
+			error(400, "Invalid request");
+		}
+
+		const assignment = await db.query.assignments.findFirst({
+			where: and(eq(assignments.id, assignmentId), eq(assignments.courseId, course.id))
+		});
+
+		if (!assignment) {
+			error(400, "Invalid request");
+		}
+
+		await db.update(assignments).set({
+			status: assignment.status === 'Incomplete' ? 'Complete' : 'Incomplete',
+		}).where(eq(assignments.id, assignmentId));
 	}
 }
