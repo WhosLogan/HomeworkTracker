@@ -6,7 +6,7 @@ Track homework on a class-basis with ease.
 
 ```bash
 # Install dependencies
-pnpm run dev
+pnpm i
 
 # Login to doppler (if not done already)
 doppler login
