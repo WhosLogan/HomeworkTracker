@@ -195,6 +195,7 @@
 										class="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white
 									 py-2 ring-1 shadow-lg ring-gray-900/5 focus:outline-hidden" role="menu"
 										aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+								<a href="/dashboard/settings" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
 								<a href="/logout" class="block px-3 py-1 text-sm/6 text-gray-900" role="menuitem" tabindex="-1" id="user-menu-item-1">Sign out</a>
 							</div>
 						{/if}
