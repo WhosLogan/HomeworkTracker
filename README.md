@@ -15,7 +15,7 @@ doppler login
 doppler setup
 
 # Start a dev server
-pnpm run dev
+doppler run -- pnpm run dev
 ```
 
 ## Deployment
