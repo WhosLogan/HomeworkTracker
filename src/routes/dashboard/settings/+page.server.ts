@@ -3,8 +3,8 @@ import { message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { type Actions, error, fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { users } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { assignments, courses, users } from '$lib/server/db/schema';
+import { and, eq } from 'drizzle-orm';
 import { hashPassword, verifyPassword } from '$lib/server/auth/hashing';
 
 const changePasswordSchema = z.object({
@@ -16,11 +16,15 @@ const changePasswordSchema = z.object({
 	message: 'New passwords must match'
 });
 
-export const load = async () => {
+export const load = async ({locals}) => {
 	const form = await superValidate(zod(changePasswordSchema));
+	const userCourses = await db.query.courses.findMany({
+		where: eq(courses.userId, locals.user!.id)
+	});
 
 	return {
-		changePasswordForm: form
+		changePasswordForm: form,
+		courses: userCourses
 	}
 }
 
@@ -50,5 +54,20 @@ export const actions: Actions = {
 		});
 
 		return message(form, 'Changed password successfully');
+	},
+	deleteCourse: async ({request, locals}) => {
+		const form = await request.formData();
+		const courseId = parseInt(form.get('courseId') as string);
+
+		const course = await db.query.courses.findFirst({
+			where: and(eq(courses.id, courseId), eq(courses.userId, locals.user!.id))
+		});
+
+		if (!course) {
+			error(400, "Invalid request");
+		}
+
+		await db.delete(assignments).where(eq(assignments.courseId, course.id));
+		await db.delete(courses).where(eq(courses.id, course.id));
 	}
 }

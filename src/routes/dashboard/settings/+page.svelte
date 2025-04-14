@@ -1,7 +1,18 @@
 <script lang="ts">
-	import { Button, Helper, Input, Label, Toast } from 'flowbite-svelte';
+	import {
+		Button,
+		Helper,
+		Input,
+		Label,
+		Table,
+		TableBody, TableBodyCell,
+		TableBodyRow,
+		TableHead, TableHeadCell,
+		Toast
+	} from 'flowbite-svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import {CheckCircleSolid} from "flowbite-svelte-icons";
+	import {enhance} from '$app/forms';
 
 	const {data} = $props();
 
@@ -58,4 +69,32 @@
 			<Button type="submit">Change Password</Button>
 		</form>
 	</div>
+
+	{#if data.courses.length > 0}
+		<div class="border rounded-lg p-3 shadow-sm space-y-4">
+			<h2 class="text-xl self-start">Courses</h2>
+			<Table class="mt-10">
+				<TableHead>
+					<TableHeadCell>Course Name</TableHeadCell>
+					<TableHeadCell>Actions</TableHeadCell>
+				</TableHead>
+				<TableBody>
+					{#each data.courses as course}
+						<TableBodyRow>
+							<TableBodyCell>{course.name}</TableBodyCell>
+							<TableBodyCell>
+								<div class="flex space-x-3">
+									<form action="?/deleteCourse" method="post" use:enhance>
+										<input type="hidden" name="courseId" value={course.id} />
+										<Button color="red" type="submit">Delete</Button>
+									</form>
+								</div>
+							</TableBodyCell>
+						</TableBodyRow>
+					{/each}
+				</TableBody>
+			</Table>
+		</div>
+	{/if}
+
 </div>
