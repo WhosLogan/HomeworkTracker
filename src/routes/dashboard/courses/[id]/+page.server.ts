@@ -13,6 +13,10 @@ const addAssignmentSchema = z.object({
 	dueDate: z.date({required_error: "Due date is required"}),
 });
 
+const changeAssignmentSchema = z.object({
+	assignmentId: z.number().min(0, "Assignment ID is invalid"),
+})
+
 export const load: PageServerLoad = async ({locals, params}) => {
 	if (isNaN(Number(params.id))) {
 		redirect(303, '/dashboard');
@@ -32,7 +36,9 @@ export const load: PageServerLoad = async ({locals, params}) => {
 
 	const addAssignmentForm = await superValidate(zod(addAssignmentSchema));
 
-	return {course, addAssignmentForm, assignments: allAssignments};
+	const changeAssignmentForm = await superValidate(zod(changeAssignmentSchema));
+
+	return {course, addAssignmentForm, changeAssignmentForm, assignments: allAssignments};
 }
 
 export const actions: Actions = {
@@ -58,8 +64,12 @@ export const actions: Actions = {
 		});
 	},
 	removeAssignment: async ({request, locals, params}) => {
-		const form = await request.formData();
-		const assignmentId = parseInt(form.get('assignmentId') as string);
+		const form = await superValidate(request, zod(changeAssignmentSchema));
+		if (!form.valid) {
+			return fail(400, {form});
+		}
+
+		const assignmentId = form.data.assignmentId;
 
 		const course = await db.query.courses.findFirst({
 			where: and(eq(courses.id, parseInt(params.id)), eq(courses.userId, locals.user!.id))
@@ -73,8 +83,12 @@ export const actions: Actions = {
 			eq(assignments.courseId, course.id)));
 	},
 	toggleComplete: async ({request, locals, params}) => {
-		const form = await request.formData();
-		const assignmentId = parseInt(form.get('assignmentId') as string);
+		const form = await superValidate(request, zod(changeAssignmentSchema));
+		if (!form.valid) {
+			return fail(400, {form});
+		}
+
+		const assignmentId = form.data.assignmentId;
 
 		const course = await db.query.courses.findFirst({
 			where: and(eq(courses.id, parseInt(params.id)), eq(courses.userId, locals.user!.id))

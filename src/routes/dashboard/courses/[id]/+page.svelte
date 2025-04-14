@@ -14,7 +14,6 @@
 		TableHeadCell
 	} from 'flowbite-svelte';
 	import { superForm } from 'sveltekit-superforms';
-	import {enhance} from '$app/forms';
 
 	const {data}: PageProps = $props();
 
@@ -27,6 +26,9 @@
 			if (result.type === 'success') addMenu = false;
 		}
 	});
+
+	const {enhance: changeAssignmentEnhance, delayed: changeAssignmentDelayed,
+		submitting: changeAssignmentSubmitting} = superForm(data.changeAssignmentForm);
 
 	// Seriously?
 	function toUTCDateString(date: Date): string {
@@ -75,17 +77,27 @@
 					</TableBodyCell>
 					<TableBodyCell>
 						<div class="flex space-x-3">
-							<form action="?/toggleComplete" method="post" use:enhance>
+							<form action="?/toggleComplete" method="post" use:changeAssignmentEnhance>
 								<input type="hidden" name="assignmentId" value={assignment.id} />
 								{#if assignment.status === 'Incomplete'}
-									<Button type="submit">Mark Complete</Button>
+									<Button type="submit" disabled={$changeAssignmentSubmitting}>
+										{#if $changeAssignmentDelayed}
+											<Spinner class="me-3" size="4" />
+										{/if}
+										Mark Complete
+									</Button>
 								{:else}
-									<Button type="submit">Mark Incomplete</Button>
+									<Button type="submit" disabled={$changeAssignmentSubmitting}>
+										{#if $changeAssignmentDelayed}
+											<Spinner class="me-3" size="4" />
+										{/if}
+										Mark Incomplete
+									</Button>
 								{/if}
 							</form>
-							<form action="?/removeAssignment" method="post" use:enhance>
+							<form action="?/removeAssignment" method="post" use:changeAssignmentEnhance>
 								<input type="hidden" name="assignmentId" value={assignment.id} />
-								<Button color="red" type="submit">Remove</Button>
+								<Button color="red" type="submit" disabled={$changeAssignmentSubmitting}>Remove</Button>
 							</form>
 						</div>
 					</TableBodyCell>
