@@ -74,7 +74,9 @@
 											</li>
 										{/each}
 										<li>
-											<div class="text-xs/6 font-semibold text-primary-200">Your Courses</div>
+											{#if data.courses.length > 0}
+												<div class="text-xs/6 font-semibold text-primary-200">Your Courses</div>
+											{/if}
 											<ul role="list" class="-mx-2 mt-2 space-y-1">
 												{#each data.courses as course}
 													<li>
@@ -132,7 +134,9 @@
 								</li>
 							{/each}
 							<li>
-								<div class="text-xs/6 font-semibold text-primary-200">Your Courses</div>
+								{#if data.courses.length > 0}
+									<div class="text-xs/6 font-semibold text-primary-200">Your Courses</div>
+								{/if}
 								<ul role="list" class="-mx-2 mt-2 space-y-1">
 									{#each data.courses as course}
 										<li>
