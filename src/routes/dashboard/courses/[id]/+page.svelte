@@ -6,7 +6,7 @@
 		Helper,
 		Input,
 		Label,
-		Modal,
+		Modal, Spinner,
 		Table,
 		TableBody, TableBodyCell,
 		TableBodyRow,
@@ -20,7 +20,9 @@
 
 	let addMenu = $state(false);
 
-	const {enhance: addAssignmentEnhance, form: addAssignmentForm, errors: addAssignmentErrors} = superForm(data.addAssignmentForm, {
+	const {enhance: addAssignmentEnhance, form: addAssignmentForm, errors: addAssignmentErrors,
+		delayed: addAssignmentDelayed,
+		submitting: addAssignmentSubmitting} = superForm(data.addAssignmentForm, {
 		onResult: async ({result}) => {
 			if (result.type === 'success') addMenu = false;
 		}
@@ -111,7 +113,12 @@
 						<Helper color='red'>{$addAssignmentErrors.dueDate}</Helper>
 					{/if}
 		</Label>
-		<Button type="submit">Create Assignment</Button>
+		<Button type="submit" disabled={$addAssignmentSubmitting}>
+			{#if $addAssignmentDelayed}
+				<Spinner class="me-3" size="4" />
+			{/if}
+			Create Assignment
+		</Button>
 	</form>
 </Modal>
 
