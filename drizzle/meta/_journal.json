@@ -43,6 +43,13 @@
       "when": 1744305126818,
       "tag": "0005_cooing_roland_deschain",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1744745194036,
+      "tag": "0006_productive_rumiko_fujikawa",
+      "breakpoints": true
     }
   ]
 }
