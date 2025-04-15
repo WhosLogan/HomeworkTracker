@@ -2,11 +2,13 @@ import type { LayoutServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { assignments, courses } from '$lib/server/db/schema';
+import { toUTCDateString } from '$lib/dateHelper';
 
 type Assignment = {
 	id: number;
 	name: string;
-	dueDate: Date;
+	dueDate: string;
+	status: "Incomplete"|"Complete"|null;
 }
 
 type Course = {
@@ -39,7 +41,8 @@ export const load: LayoutServerLoad = async ({locals}) => {
 			filteredCourse.assignments.push({
 				id: assignment.id,
 				name: assignment.assignmentName,
-				dueDate: assignment.dueDate
+				dueDate: toUTCDateString(assignment.dueDate),
+				status: assignment.status,
 			})
 		}
 
