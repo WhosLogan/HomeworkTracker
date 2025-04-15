@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { Button, Helper, Input, Label } from 'flowbite-svelte';
+	import { Button, Helper, Input, Label, Spinner } from 'flowbite-svelte';
 	import type { PageProps } from './$types';
 	import { superForm } from 'sveltekit-superforms';
 
 	const {data}: PageProps = $props();
 
-	const {form, errors, enhance} = superForm(data.addCourseForm);
+	const {form, errors, enhance, delayed, submitting} = superForm(data.addCourseForm);
 </script>
 
 <div class="flex justify-center">
@@ -28,6 +28,11 @@
 				<Helper color='red'>{$errors.professorName}</Helper>
 			{/if}
 		</Label>
-		<Button size="lg" type="submit">Add Course</Button>
+		<Button size="lg" type="submit" disabled={$submitting}>
+			{#if $delayed}
+				<Spinner class="me-3" size="4" />
+			{/if}
+			Add Course
+		</Button>
 	</form>
 </div>

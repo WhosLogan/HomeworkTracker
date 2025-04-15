@@ -31,6 +31,7 @@ export const assignments = sqliteTable('assignments', {
 		.references(() => courses.id),
 	assignmentName: text('assignment_name').notNull(),
 	dueDate: integer('due_date', {mode: 'timestamp'}).notNull(),
+	status: text('status', {enum: ['Incomplete', 'Complete']}).default('Incomplete').notNull(),
 });
 
 export type Session = InferSelectModel<typeof sessions>;

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { Label, Input, Button, Checkbox, Helper } from 'flowbite-svelte';
+	import { Label, Input, Button, Checkbox, Helper, Spinner } from 'flowbite-svelte';
 	import {superForm} from 'sveltekit-superforms';
 	import type {PageProps} from './$types';
 
 	const { data }: PageProps = $props();
 
-	const { form, enhance, errors } = superForm(data.registerForm);
+	const { form, enhance, errors, submitting, delayed } = superForm(data.registerForm);
 </script>
 
 <div class="flex items-center justify-center h-screen bg-primary-100">
@@ -47,7 +47,12 @@
 			{/if}
 		</Label>
 		<Checkbox>Remember me</Checkbox>
-		<Button type="submit">Sign Up</Button>
+		<Button type="submit" disabled={$submitting}>
+			{#if $delayed}
+				<Spinner class="me-3" size="4" />
+			{/if}
+			Sign Up
+		</Button>
 		<a href="/login" class="text-primary-700 hover:text-primary-700/80">
 			Already have an account?
 		</a>

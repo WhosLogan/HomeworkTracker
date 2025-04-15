@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import {
+		Badge,
 		Button,
 		Helper,
 		Input,
 		Label,
-		Modal,
+		Modal, Spinner,
 		Table,
 		TableBody, TableBodyCell,
 		TableBodyRow,
@@ -13,16 +14,22 @@
 		TableHeadCell
 	} from 'flowbite-svelte';
 	import { superForm } from 'sveltekit-superforms';
+	import {toUTCDateString} from '$lib/dateHelper';
 
 	const {data}: PageProps = $props();
 
 	let addMenu = $state(false);
 
-	const {enhance: addAssignmentEnhance, form: addAssignmentForm, errors: addAssignmentErrors} = superForm(data.addAssignmentForm, {
+	const {enhance: addAssignmentEnhance, form: addAssignmentForm, errors: addAssignmentErrors,
+		delayed: addAssignmentDelayed,
+		submitting: addAssignmentSubmitting} = superForm(data.addAssignmentForm, {
 		onResult: async ({result}) => {
 			if (result.type === 'success') addMenu = false;
 		}
 	});
+
+	const {enhance: changeAssignmentEnhance, delayed: changeAssignmentDelayed,
+		submitting: changeAssignmentSubmitting} = superForm(data.changeAssignmentForm);
 </script>
 
 <div class="flex flex-col items-center">
@@ -39,12 +46,47 @@
 		<TableHead>
 			<TableHeadCell>Assignment Name</TableHeadCell>
 			<TableHeadCell>Due Date</TableHeadCell>
+			<TableHeadCell>Status</TableHeadCell>
+			<TableHeadCell>Actions</TableHeadCell>
 		</TableHead>
 		<TableBody>
 			{#each data.assignments as assignment}
 				<TableBodyRow>
 					<TableBodyCell>{assignment.assignmentName}</TableBodyCell>
-					<TableBodyCell>{assignment.dueDate.toDateString()}</TableBodyCell>
+					<TableBodyCell>{toUTCDateString(assignment.dueDate)}</TableBodyCell>
+					<TableBodyCell>
+						{#if assignment.status === 'Incomplete'}
+							<Badge color="yellow">Incomplete</Badge>
+						{:else}
+							<Badge color="green">Complete</Badge>
+						{/if}
+					</TableBodyCell>
+					<TableBodyCell>
+						<div class="flex space-x-3">
+							<form action="?/toggleComplete" method="post" use:changeAssignmentEnhance>
+								<input type="hidden" name="assignmentId" value={assignment.id} />
+								{#if assignment.status === 'Incomplete'}
+									<Button type="submit" disabled={$changeAssignmentSubmitting}>
+										{#if $changeAssignmentDelayed}
+											<Spinner class="me-3" size="4" />
+										{/if}
+										Mark Complete
+									</Button>
+								{:else}
+									<Button type="submit" disabled={$changeAssignmentSubmitting}>
+										{#if $changeAssignmentDelayed}
+											<Spinner class="me-3" size="4" />
+										{/if}
+										Mark Incomplete
+									</Button>
+								{/if}
+							</form>
+							<form action="?/removeAssignment" method="post" use:changeAssignmentEnhance>
+								<input type="hidden" name="assignmentId" value={assignment.id} />
+								<Button color="red" type="submit" disabled={$changeAssignmentSubmitting}>Remove</Button>
+							</form>
+						</div>
+					</TableBodyCell>
 				</TableBodyRow>
 			{/each}
 		</TableBody>
@@ -65,11 +107,16 @@
 		<Label class="space-y-2 w-full">
 			<span>Due Date</span>
 			<Input name="dueDate" required type="date" bind:value={$addAssignmentForm.dueDate} />
-					{#if $addAssignmentErrors.professorName}
+					{#if $addAssignmentErrors.dueDate}
 						<Helper color='red'>{$addAssignmentErrors.dueDate}</Helper>
 					{/if}
 		</Label>
-		<Button variant="primary" type="submit">Create Assignment</Button>
+		<Button type="submit" disabled={$addAssignmentSubmitting}>
+			{#if $addAssignmentDelayed}
+				<Spinner class="me-3" size="4" />
+			{/if}
+			Create Assignment
+		</Button>
 	</form>
 </Modal>
 
