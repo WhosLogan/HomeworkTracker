@@ -10,8 +10,8 @@
 		due: string
 	}
 
-	let dueToday: dueAssignment = [];
-	let dueSoon: dueAssignment = [];
+	let dueToday: dueAssignment[] = [];
+	let dueSoon: dueAssignment[] = [];
 
 	const nowDate = toUTCDateString(new Date(Date.now()));
 
@@ -51,7 +51,7 @@
 
 <h1 class="text-2xl font-semibold">Dashboard</h1>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 gap-3">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 gap-3 w-[600px]">
 	<div class="border rounded-lg p-3 shadow-sm space-y-4">
 		<h2 class="font-semibold text-xl">
 			Due Today
